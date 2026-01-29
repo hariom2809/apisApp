@@ -73,7 +73,7 @@ namespace apisApp.Controllers
         [HttpPost]
         public IActionResult UpsertUser(UpsertUserDto upsertDto)
         {
-            User user;-
+            User user;
 
             if (!upsertDto.Id.HasValue || upsertDto.Id == Guid.Empty) 
             {
