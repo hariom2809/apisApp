@@ -1,5 +1,7 @@
 ﻿using apisApp.Data;
-using apisApp.Models;
+using apisApp.Models.DTOs;
+using apisApp.Models.Entities;
+using apisApp.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,115 +11,39 @@ namespace apisApp.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        public UsersController(MyDbContext dbContext)
+        private readonly IUserService _userService;
+        public UsersController(IUserService userService)
         {
-            this.DbContext = dbContext;
+            _userService = userService;
         }
-
-        public MyDbContext DbContext { get; }
 
         [HttpGet]
         public IActionResult GetAllUsers()
         {
-            return Ok(DbContext.Users.ToList());
+            return Ok(_userService.GetAllUsers());
         }
 
         [HttpGet]
-        [Route("{id:Guid}")]
+        [Route("id:Guid")]
         public IActionResult GetUserById(Guid id)
         {
-            var user = DbContext.Users.Find(id);
-            if (user is null)
-            {
-                return NotFound();
-            }
-            return Ok(user);
+            return Ok(_userService.GetUserById(id));
         }
-
-        //[HttpPost]
-        //public IActionResult AddUser(AddUserDto addUserDto)
-        //{
-        //    var userEntry = new User()
-        //    {
-        //        Name = addUserDto.Name,
-        //        Email = addUserDto.Email,
-        //        CreatedAt = DateTime.UtcNow,
-        //        UpdatedAt = DateTime.UtcNow
-        //    };
-
-        //    DbContext.Users.Add(userEntry);
-        //    DbContext.SaveChanges();
-
-        //    return Ok(userEntry);
-        //}
-
-        //[HttpPut]
-        //[Route("{id:Guid}")]
-        //public IActionResult UpdateUser(Guid id, UpdateUserDto updateUserDto)
-        //{
-        //    var user = DbContext.Users.Find(id);
-        //    if (user is null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    user.Name = updateUserDto.Name;
-        //    user.Email = updateUserDto.Email;
-        //    user.UpdatedAt = DateTime.UtcNow;
-
-        //    DbContext.SaveChanges();
-
-        //    return Ok(user);
-        //}
 
         [HttpPost]
-        public IActionResult UpsertUser(UpsertUserDto upsertDto)
+        [Route("id:Guid")]
+        public IActionResult UpsertUser(Guid id, UpsertUserDto upsertDto)
         {
-            User user;
-
-            if (!upsertDto.Id.HasValue || upsertDto.Id == Guid.Empty) 
-            {
-                user = new User
-                {
-                    Id = Guid.NewGuid(),
-                    Name = upsertDto.Name,
-                    Email = upsertDto.Email,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                };
-                DbContext.Users.Add(user);
-            }
-            else
-            {
-                user = DbContext.Users.Find(upsertDto.Id);
-
-                if (user is null)
-                {
-                    return NotFound();
-                }
-                user.Name = upsertDto.Name;
-                user.Email = upsertDto.Email;
-                user.UpdatedAt = DateTime.UtcNow;
-            }
-            DbContext.SaveChanges();
+            var user = _userService.UpsertUser(id, upsertDto);
             return Ok(user);
         }
 
-
         [HttpDelete]
-        [Route("{id:Guid}")]
+        [Route("id:Guid")]
         public IActionResult DeleteUser(Guid id)
         {
-            var user = DbContext.Users.Find(id);
-            if (user is null)
-            {
-                return NotFound();
-            }
-
-            DbContext.Remove(user);
-            DbContext.SaveChanges();
-
-            return Ok();
+            return Ok(_userService.DeleteUser(id));
         }
+
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace apisApp.Models
+﻿namespace apisApp.Models.Entities
 {
-    public class AddUserDto
+    public class User
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

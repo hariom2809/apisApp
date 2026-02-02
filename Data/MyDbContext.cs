@@ -1,4 +1,4 @@
-﻿using apisApp.Models;
+﻿using apisApp.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace apisApp.Data

@@ -19,7 +19,8 @@ namespace apisApp
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<apisApp.Data.MyDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaltConnection")));
-            
+            builder.Services.AddScoped<apisApp.Services.Interfaces.IUserService, apisApp.Services.UserService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

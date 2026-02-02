@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace apisApp.Models
+namespace apisApp.Models.DTOs
 {
     public class UpsertUserDto
     {
