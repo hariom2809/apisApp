@@ -13,10 +13,12 @@ namespace apisApp.Services
         {
             _dbContext = dbContext;
         }
+
         public IEnumerable<User> GetAllUsers()
         {
             return _dbContext.Users.ToList();
         }
+
         public User? GetUserById(Guid id)
         {
             var user = _dbContext.Users.Find(id);
@@ -26,6 +28,7 @@ namespace apisApp.Services
             }
             return user;
         }
+
         public User UpsertUser(Guid id, UpsertUserDto upsertDto)
         {
             User user;
@@ -55,6 +58,7 @@ namespace apisApp.Services
             _dbContext.SaveChanges();
             return user;
         }
+
         public bool DeleteUser(Guid id)
         {
             var user = _dbContext.Users.Find(id);
